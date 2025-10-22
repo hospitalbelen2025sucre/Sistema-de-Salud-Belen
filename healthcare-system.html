@@ -1,0 +1,3471 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Centro de Salud Integral BELÉN - Sistema Unificado</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;           
+            box-sizing: border-box;
+        }
+
+        :root {
+            --color-primary: #dc2626;
+            --color-primary-dark: #991b1b;
+            --color-secondary: #f7f8fc;
+            --color-secondary-dark: #f6f4f8;
+            --color-white: #ffffff;
+            --color-gray-100: #f3f4f6;
+            --color-gray-200: #e5e7eb;
+            --color-gray-600: #6b7280;
+            --color-gray-800: #374151;
+            --color-gray-900: #111827;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 0;
+            scroll-behavior: smooth;
+            background: linear-gradient(135deg, #eeeff1 0%, #f9f8fa 100%);
+            min-height: 100vh;
+        }
+
+        /* Navigation */
+        .navigation {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 50;
+            background: rgba(220, 38, 38, 0.95);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 1rem;
+        }
+
+        .nav-content {
+            display: flex;
+            height: 4rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-logo {
+            display: flex;
+            align-items: center;
+            flex-shrink: 0;
+        }
+
+        .nav-logo p {
+            font-size: 1.125rem;
+            font-weight: 700;
+            color: white;
+        }
+
+        .nav-links {
+            display: none;
+            align-items: center;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            font-size: 0.875rem;
+            font-weight: 500;
+            color: white;
+            text-decoration: none;
+            transition: color 0.2s;
+            padding: 0.5rem 1rem;
+            border-radius: 0.25rem;
+        }
+
+        .nav-links a:hover {
+            color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-links a.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        @media (min-width: 640px) {
+            .nav-links {
+                display: flex;
+            }
+        }
+        
+        /* Main Content */
+        .main-content {
+            margin-top: 4rem;
+            padding: 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        /* Section Container */
+        .section-container {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            overflow: hidden;
+            margin-bottom: 30px;
+        }
+        
+        .section-header {
+            background: linear-gradient(135deg, var(--color-primary) 0%, var(--color-primary-dark) 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .section-header h1 {
+            font-size: 2.5em;
+            margin-bottom: 15px;
+        }
+        
+        .section-header p {
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        
+        .section-content {
+            padding: 40px;
+        }
+        
+        /* Tab Navigation */
+        .tab-navigation {
+            display: flex;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .tab-button {
+            padding: 15px 25px;
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            color: #666;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-button.active {
+            color: var(--color-primary);
+            border-bottom: 3px solid var(--color-primary);
+            background: rgba(220, 38, 38, 0.05);
+        }
+        
+        .tab-button:hover:not(.active) {
+            background: #e9ecef;
+        }
+        
+        /* Tab Content */
+        .tab-content {
+            display: none;
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        /* Main Hero Section */
+        .main-section {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            background-image: 
+                url('AdobeStock_512307383_Preview.jpeg'),
+                radial-gradient(circle at 20% 80%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.1) 0%, transparent 50%),
+                linear-gradient(135deg, rgba(220, 38, 38, 0.85), rgba(153, 27, 27, 0.9)),
+                linear-gradient(to bottom right, #dc2626, #991b1b);
+            
+            background-size: 
+                cover,
+                400px 400px,
+                600px 600px,
+                100% 100%,
+                100% 100%;
+            
+            background-position: 
+                center center,
+                0 0,
+                100% 100%,
+                0 0,
+                0 0;
+            
+            background-repeat: 
+                no-repeat,
+                repeat,
+                repeat,
+                no-repeat,
+                no-repeat;
+            
+            background-attachment: fixed;
+            min-height: 100vh;
+        }
+
+        .main-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                repeating-linear-gradient(
+                    45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.03) 2px,
+                    rgba(255, 255, 255, 0.03) 4px
+                ),
+                repeating-linear-gradient(
+                    -45deg,
+                    transparent,
+                    transparent 2px,
+                    rgba(255, 255, 255, 0.02) 2px,
+                    rgba(255, 255, 255, 0.02) 4px
+                );
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .hero-container {
+            position: relative;
+            z-index: 2;
+            max-width: 1280px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr;
+            align-items: center;
+            gap: 2.5rem;
+            min-height: 100vh;
+            overflow: hidden;
+            padding: 6rem 1rem 3rem;
+        }
+
+        @media (min-width: 1024px) {
+            .hero-container {
+                grid-template-columns: 2fr 1fr;
+                padding: 5rem 1rem 0;
+            }
+        }
+
+        .hero-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            backdrop-filter: blur(5px);
+        }
+
+        @media (min-width: 640px) {
+            .hero-content {
+                align-items: flex-start;
+                padding: 2rem;
+                background: rgba(255, 255, 255, 0.08);
+            }
+        }
+
+        .medical-logo {
+            width: 8rem;
+            height: 8rem;
+        }
+
+        @media (min-width: 768px) {
+            .medical-logo {
+                width: 10rem;
+                height: 10rem;
+            }
+        }
+
+        .hero-title {
+            margin-top: 1.5rem;
+            text-align: center;
+            font-size: 2.25rem;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: rgb(243, 3, 3);
+        }
+
+        @media (min-width: 640px) {
+            .hero-title {
+                text-align: left;
+                font-size: 3rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .hero-title {
+                font-size: 3.75rem;
+            }
+        }
+
+        .hero-subtitle {
+            margin-top: 1.5rem;
+            max-width: 32rem;
+            text-align: center;
+            font-size: 1.125rem;
+            color: rgba(8, 8, 8, 0.9);
+        }
+
+        @media (min-width: 640px) {
+            .hero-subtitle {
+                text-align: left;
+                font-size: 1.25rem;
+            }
+        }
+
+        /* Registration Form */
+        .form-container {
+            position: relative;
+            display: flex;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+            padding: 0 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .form-container {
+                justify-content: flex-end;
+            }
+        }
+
+        .registration-form {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            backdrop-filter: blur(10px);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--color-gray-800);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.875rem;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--color-gray-200);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid var(--color-gray-200);
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .form-submit {
+            width: 100%;
+            background: var(--color-primary);
+            color: white;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .form-submit:hover {
+            background: var(--color-primary-dark);
+        }
+
+        /* Statistics Section */
+        .statistics-section {
+            max-width: 64rem;
+            margin: 0 auto;
+            padding: 4rem 1rem;
+        }
+
+        .section-title {
+            font-size: 1.875rem;
+            font-weight: 700;
+            color: var(--color-primary);
+            margin-bottom: 1.5rem;
+        }
+
+        .stats-container {
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+
+        .stat-icon {
+            width: 3rem;
+            height: 3rem;
+            background: var(--color-primary);
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin: 0 auto 1rem;
+        }
+
+        .stat-number {
+            font-size: 2rem;
+            font-weight: 800;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--color-gray-600);
+            font-size: 0.875rem;
+        }
+
+        /* Services Section */
+        .services-section {
+            max-width: 96rem;
+            margin: 0 auto;
+            padding: 4rem 1rem;
+        }
+
+        .services-title {
+            font-size: 2.25rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.025em;
+            color: var(--color-primary);
+        }
+
+        @media (min-width: 768px) {
+            .services-title {
+                font-size: 2.5rem;
+            }
+        }
+
+        .services-container {
+            border-radius: 0.75rem;
+            background: #ededed;
+            padding: 2.5rem 0.5rem;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (min-width: 768px) {
+            .services-container {
+                padding: 2.5rem 3rem;
+            }
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            justify-items: center;
+        }
+
+        @media (min-width: 768px) {
+            .services-grid {
+                grid-template-columns: repeat(4, 1fr);
+                gap: 2rem;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            .services-grid {
+                gap: 3rem;
+            }
+        }
+
+        .service-card {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            max-width: 18rem;
+        }
+
+        .service-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.5s;
+        }
+
+        .service-card:hover::before {
+            left: 100%;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+        }
+
+        .service-icon-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .service-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            box-shadow: 0 8px 25px rgba(220, 53, 69, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
+            transform: rotate(45deg);
+            transition: all 0.3s ease;
+        }
+
+        .service-card:hover .service-icon {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 15px 35px rgba(220, 53, 69, 0.4);
+        }
+
+        .service-card:hover .service-icon::before {
+            animation: shine 0.6s ease-in-out;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
+        }
+
+        .service-name {
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #333;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .service-info {
+            text-align: center;
+        }
+
+        .service-hours {
+            color: #666;
+            line-height: 1.6;
+        }
+
+        .service-24h {
+            background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+            color: white;
+            padding: 10px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .time-label {
+            font-weight: bold;
+            color: #667eea;
+        }
+
+        .time-text {
+            color: #333;
+        }
+
+        .view-appointments-btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 15px;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .view-appointments-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            background: white;
+            margin: 2% auto;
+            padding: 0;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from { transform: translateY(-100px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px 30px;
+            border-radius: 20px 20px 0 0;
+            position: relative;
+        }
+
+        .modal-title {
+            font-size: 1.8rem;
+            margin: 0;
+        }
+
+        .close {
+            color: white;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            position: absolute;
+            right: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .close:hover {
+            opacity: 0.7;
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .shift-tabs {
+            display: flex;
+            margin-bottom: 20px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .shift-tab {
+            flex: 1;
+            padding: 12px 20px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .shift-tab.active {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .appointments-container {
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .appointments-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .available-slots {
+            background: linear-gradient(45deg, #20bf6b, #26d0ce);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+        }
+
+        .appointment-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .appointment-slot {
+            background: white;
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            border-left: 4px solid #667eea;
+        }
+
+        .appointment-slot.occupied {
+            border-left-color: #ff6b6b;
+            background: #fff5f5;
+        }
+
+        .slot-number {
+            font-weight: bold;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+
+        .patient-info {
+            color: #333;
+            font-size: 0.9rem;
+        }
+
+        .patient-info.empty {
+            color: #999;
+            font-style: italic;
+        }
+
+        .add-patient-btn {
+            background: linear-gradient(45deg, #20bf6b, #26d0ce);
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        .add-patient-btn.public-view {
+            background: #6c757d;
+            cursor: pointer;
+        }
+
+        .add-patient-btn.public-view:hover {
+            background: #5a6268;
+        }
+
+        .patient-form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border: 2px dashed #ddd;
+        }
+
+        .form-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #ff6b6b 0%, #c92a2a 100%);
+            color: white;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #51cf66 0%, #2f9e44 100%);
+            color: white;
+        }
+
+        .btn-info {
+            background: linear-gradient(135deg, #339af0 0%, #1864ab 100%);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: scale(1.05);
+        }
+
+        .login-error {
+            color: #dc3545;
+            text-align: center;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .logged-user-info {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            z-index: 100;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 5px 15px;
+            border-radius: 5px;
+            margin-left: 10px;
+            cursor: pointer;
+        }
+
+        .visitor-info {
+            background: linear-gradient(135deg, #cce5ff, #b3d9ff);
+            color: #004085;
+            padding: 10px 15px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        .staff-only-action {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            color: #856404;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            margin-top: 5px;
+        }
+
+        /* Export Button */
+        .export-btn {
+            background: linear-gradient(45deg, #28a745, #20c997);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-left: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .export-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(40, 167, 69, 0.4);
+        }
+
+        /* Reclamos Section */
+        .reclamos-section {
+            max-width: 64rem;
+            margin: 0 auto;
+            padding: 4rem 1rem 2rem;
+        }
+
+        .reclamos-container {
+            border-radius: 0.5rem;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 1.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .reclamos-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .reclamos-input {
+            width: 100%;
+            border-radius: 0.25rem;
+            border: 1px solid rgba(220, 38, 38, 0.2);
+            background: white;
+            padding: 0.5rem 1rem;
+            color: var(--color-gray-900);
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+
+        .reclamos-input::placeholder {
+            color: var(--color-gray-600);
+        }
+
+        .reclamos-textarea {
+            min-height: 6rem;
+            resize: vertical;
+        }
+
+        .reclamos-submit {
+            width: 100%;
+            border-radius: 0.25rem;
+            background: var(--color-primary);
+            padding: 0.5rem;
+            font-weight: 600;
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .reclamos-submit:hover {
+            background: rgba(220, 38, 38, 0.9);
+        }
+
+        .map-section {
+            margin-top: 2rem;
+        }
+
+        .map-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: var(--color-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .map-container {
+            overflow: hidden;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            height: 18rem;
+        }
+
+        .map-iframe {
+            border: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Enhanced Features */
+        .enhanced-features {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .features-title {
+            color: var(--color-primary);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 1rem;
+            background: var(--color-gray-100);
+            border-radius: 0.5rem;
+        }
+
+        .feature-icon {
+            font-size: 1.5rem;
+        }
+
+        .feature-text {
+            font-weight: 600;
+            color: var(--color-gray-800);
+        }
+
+        /* PAP System Styles */
+        .stats-container-pap {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            padding: 30px;
+            background: #f8f9fa;
+        }
+        
+        .stat-card-pap {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+        
+        .stat-card-pap:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-card-pap .icon {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        
+        .stat-card-pap .number {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+        
+        .stat-card-pap .label {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .warning {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .info-box {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 30px;
+            background: #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            margin: 20px 0;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            transition: width 0.5s ease;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        
+        th, td {
+            padding: 12px;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #667eea;
+            color: white;
+        }
+        
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+        
+        .no-data {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+            font-style: italic;
+        }
+        
+        .search-result {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        /* Responsive improvements */
+        @media (max-width: 768px) {
+            .hero-container {
+                padding-top: 5rem;
+            }
+            
+            .services-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.5rem;
+            }
+            
+            .service-card {
+                max-width: none;
+            }
+            
+            .service-icon {
+                width: 5rem;
+                height: 5rem;
+            }
+            
+            .service-name {
+                font-size: 1rem;
+            }
+            
+            .service-hours {
+                font-size: 0.75rem;
+            }
+            
+            .tab-navigation {
+                flex-direction: column;
+            }
+            
+            .tab-button {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .services-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .appointments-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+
+        /* Animation */
+        .fade-in {
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.8s ease forwards;
+        }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .scroll-animation {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .scroll-animation.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <header class="navigation">
+        <nav class="nav-container">
+            <div class="nav-content">
+                <div class="nav-logo">
+                    <p>CENTRO DE SALUD INTEGRAL "BELEN"</p>
+                </div>
+                <div class="nav-links">
+                    <a href="#" class="active" onclick="showSection('main'); return false;">INICIO</a>
+                    <a href="#" onclick="showSection('appointments'); return false;">CITAS MÉDICAS</a>
+                    <a href="#" onclick="showSection('pap'); return false;">SISTEMA PAP</a>
+                    <a href="#estadistica">ESTADÍSTICAS</a>
+                    <a href="#servicios">SERVICIOS</a>
+                    <a href="#reclamos">RECLAMOS</a>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <!-- User Info Display -->
+    <div id="userInfo" class="logged-user-info" style="display: none;">
+        <span id="loggedUser"></span>
+        <button class="logout-btn" onclick="logout()">Cerrar Sesión</button>
+    </div>
+
+    <!-- Login Modal -->
+    <div id="loginModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">🔐 Acceso Personal Médico</h3>
+                <span class="close" onclick="closeLoginModal()">&times;</span>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 15px; color: #666;">Ingrese sus credenciales para registrar pacientes</p>
+                <div class="form-group">
+                    <label for="username">Usuario:</label>
+                    <input type="text" id="username" class="form-control" placeholder="Ingrese su usuario">
+                </div>
+                <div class="form-group">
+                    <label for="password">Contraseña:</label>
+                    <input type="password" id="password" class="form-control" placeholder="Ingrese su contraseña">
+                </div>
+                <div id="loginError" class="login-error" style="display: none;"></div>
+                <div class="form-actions" style="margin-top: 20px;">
+                    <button class="btn btn-secondary" onclick="closeLoginModal()">Cancelar</button>
+                    <button class="btn btn-primary" onclick="authenticate()">Iniciar Sesión</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Sections -->
+    <div class="main-content">
+        <!-- Main Website Section -->
+        <div id="main-section" class="section active">
+            <!-- Main Content -->
+            <main class="main-section">
+                <!-- Hero Section -->
+                <div class="hero-container">
+                    <div class="hero-content fade-in">
+                        <!-- Logo SVG -->
+                        <svg class="medical-logo" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Logo del Centro de Salud Integral Belen">
+                            <defs>
+                                <path id="logo-circular-path" d="M 100,30 a 70,70 0 1,1 0,140 a 70,70 0 1,1 0,-140" fill="none"/>
+                            </defs>
+                            <circle cx="100" cy="100" r="95" fill="#ffffff" stroke="#dc2626" stroke-width="10"/>
+                            <circle cx="100" cy="100" r="42" fill="#dc2626"/>
+                            <rect x="82" y="94" width="36" height="12" fill="#ffffff" rx="1"/>
+                            <rect x="94" y="82" width="12" height="36" fill="#ffffff" rx="1"/>
+                            <text style="font-family: Inter, sans-serif; font-size: 17.5px; font-weight: 600; letter-spacing: 1.5px; fill: #dc2626;" text-anchor="middle">
+                                <textPath href="#logo-circular-path" startOffset="35%">CENTRO DE SALUD INTEGRAL</textPath>
+                            </text>
+                            <text style="font-family: Inter, sans-serif; font-size: 17.5px; font-weight: 900; letter-spacing: 5px; fill: #dc2626;" text-anchor="middle">
+                                <textPath href="#logo-circular-path" startOffset="85%">"BELEN"</textPath>
+                            </text>
+                        </svg>
+
+                        <h1 class="hero-title">CENTRO DE SALUD INTEGRAL "BELEN"</h1>
+                        <p class="hero-subtitle">Atención las 24 horas</p>
+                    </div>
+
+                    <div class="form-container">
+                        <div class="registration-form fade-in">
+                            <h2 class="form-title">📋 Registro de Pacientes</h2>
+                            <form id="registrationForm">
+                                <div class="form-group">
+                                    <label for="nombreCompleto">Nombre Completo *</label>
+                                    <input type="text" id="nombreCompleto" name="nombreCompleto" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="ci">Carnet de Identidad *</label>
+                                    <input type="text" id="ci" name="ci" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="telefono">Teléfono *</label>
+                                    <input type="tel" id="telefono" name="telefono" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="servicio">Servicio Solicitado *</label>
+                                    <select id="servicio" name="servicio" required>
+                                        <option value="">Seleccionar servicio</option>
+                                        <option value="odontologia">Odontología</option>
+                                        <option value="Ginecologia">Ginecología</option>
+                                        <option value="Pediatria">Pediatría</option>
+                                        <option value="Laboratorio">Laboratorio</option>
+                                        <option value="Ecografia">Ecografía</option>
+                                        <option value="Medicina General">Medicina General</option>
+                                        <option value="Vacunas PAI">Vacunas PAI</option>
+                                        <option value="Emergencia">Emergencia</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="seguro">Verificación de Seguro *</label>
+                                    <select id="seguro" name="seguro" required>
+                                        <option value="">Seleccionar Seguro</option>
+                                        <option value="SUS">SUS</option>
+                                        <option value="Caja Privada">Caja Privada</option>
+                                        <option value="Ninguno">Ninguno</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="turno">Turno *</label>
+                                    <select id="turno" name="turno" required>
+                                        <option value="">Seleccionar Turno</option>
+                                        <option value="morning">Mañana</option>
+                                        <option value="afternoon">Tarde</option>
+                                    </select>
+                                </div>
+                                <button type="submit" class="form-submit">Registrar Paciente</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Statistics Section -->
+                <section id="estadistica" class="statistics-section scroll-animation">
+                    <h2 class="section-title">Estadística</h2>
+                    <div class="stats-container">
+                        <p style="color: #374151; font-size: 1rem;">Indicadores estadísticos relevantes del centro de salud</p>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <div class="stat-icon">👥</div>
+                                <div class="stat-number">2,847</div>
+                                <div class="stat-label">Pacientes Atendidos</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">⭐</div>
+                                <div class="stat-number">98%</div>
+                                <div class="stat-label">Satisfacción</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">🚑</div>
+                                <div class="stat-number">456</div>
+                                <div class="stat-label">Emergencias</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-icon">⏱️</div>
+                                <div class="stat-number">25 min</div>
+                                <div class="stat-label">Tiempo Promedio</div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Services Section -->
+                <section id="servicios" class="services-section">
+                    <h2 class="services-title">Atención de Servicios de Lunes a Viernes</h2>
+                    <div class="services-container">
+                        <div class="services-grid">
+                            <!-- Odontología -->
+                            <div class="service-card" onclick="openAppointmentModal('ODONTOLOGIA')">
+                                <div class="service-icon-container">
+                                    <div class="service-icon">🦷</div>
+                                </div>
+                                <div class="service-info">
+                                    <div class="service-name">ODONTOLOGIA</div>
+                                    <div class="service-hours">
+                                        <div><span class="time-label">Mañana:</span> <span class="time-text">07:00 a 13:00</span></div>
+                                        <div><span class="time-label">Tarde:</span> <span class="time-text">13:00 a 19:00</span></div>
+                                    </div>
+                                    <button class="view-appointments-btn">Ver Fichas y Pacientes</button>
+                                </div>
+                            </div>
+
+                            <!-- Vacunas PAI -->
+                            <div class="service-card" onclick="openAppointmentModal('VACUNAS PAI')">
+                                <div class="service-icon-container">
+                                    <div class="service-icon">💉</div>
+                                </div>
+                                <div class="service-info">
+                                    <div class="service-name">VACUNAS PAI</div>
+                                    <div class="service-hours">
+                                        <div><span class="time-label">Mañana:</span> <span class="time-text">08:00 a 14:00</span></div>
+                                        <div><span class="time-label">Tarde:</span> <span class="time-text">14:00 a 17:00</span></div>
+                                    </div>
+                                    <button class="view-appointments-btn">Ver Fichas y Pacientes</button>
+                                </div>
+                            </div>
+
+                            <!-- Urgencias -->
+                            <div class="service-card" onclick="openAppointmentModal('URGENCIAS')">
+                                <div class="service-icon-container">
+                                    <div class="service-icon">🚑</div>
+                                </div>
+                                <div class="service-info">
+                                    <div class="service-name">URGENCIAS</div>
+                                    <div class="service-24h">ATENCIÓN LAS 24 HORAS</div>
+                                    <button class="view-appointments-btn">Ver Fichas y Pacientes</button>
+                                </div>
+                            </div>
+
+                            <!-- Consulta Externa -->
+                            <div class="service-card" onclick="openAppointmentModal('CONSULTA EXTERNA')">
+                                <div class="service-icon-container">
+                                    <div class="service-icon">🩺</div>
+                                </div>
+                                <div class="service-info">
+                                    <div class="service-name">CONSULTA EXTERNA MED. 1-2</div>
+                                    <div class="service-hours">
+                                        <div><span class="time-label">Mañana:</span> <span class="time-text">07:00 a 13:00</span></div>
+                                        <div><span class="time-label">Tarde:</span> <span class="time-text">13:00 a 19:00</span></div>
+                                    </div>
+                                    <button class="view-appointments-btn">Ver Fichas y Pacientes</button>
+                                </div>
+                            </div>
+
+                            <!-- Laboratorio -->
+                            <div class="service-card" onclick="openAppointmentModal('LABORATORIO')">
+                                <div class="service-icon-container">
+                                    <div class="service-icon">🔬</div>
+                                </div>
+                                <div class="service-info">
+                                    <div class="service-name">LABORATORIO</div>
+                                    <div class="service-hours">
+                                        <div><span class="time-label">Mañana:</span> <span class="time-text">07:00 a 13:00</span></div>
+                                        <div><span class="time-label">Tarde:</span> <span class="time-text">13:00 a 19:00</span></div>
+                                    </div>
+                                    <button class="view-appointments-btn">Ver Fichas y Pacientes</button>
+                                </div>
+                            </div>
+
+                            <!-- Ginecología -->
+                            <div class="service-card" onclick="openAppointmentModal('GINECOLOGIA')">
+                                <div class="service-icon-container">
+                                    <div class="service-icon"> GINE</div>
+                                </div>
+                                <div class="service-info">
+                                    <div class="service-name">GINECOLOGIA</div>
+                                    <div class="service-hours">
+                                        <div><span class="time-label">Mañana:</span> <span class="time-text">08:00 a 13:00</span></div>
+                                        <div><span class="time-label">Tarde:</span> <span class="time-text">00:00 a 00:00</span></div>
+                                    </div>
+                                    <button class="view-appointments-btn">Ver Fichas y Pacientes</button>
+                                </div>
+                            </div>
+
+                            <!-- Pediatría -->
+                            <div class="service-card" onclick="openAppointmentModal('PEDIATRIA')">
+                                <div class="service-icon-container">
+                                    <div class="service-icon">👶</div>
+                                </div>
+                                <div class="service-info">
+                                    <div class="service-name">PEDIATRIA</div>
+                                    <div class="service-hours">
+                                        <div><span class="time-label">Mañana:</span> <span class="time-text">08:00 a 11:00</span></div>
+                                        <div><span class="time-label">Tarde:</span> <span class="time-text">14:00 a 17:00</span></div>
+                                    </div>
+                                    <button class="view-appointments-btn">Ver Fichas y Pacientes</button>
+                                </div>
+                            </div>
+
+                            <!-- Ecografía -->
+                            <div class="service-card" onclick="openAppointmentModal('ECOGRAFIA')">
+                                <div class="service-icon-container">
+                                    <div class="service-icon">📡</div>
+                                </div>
+                                <div class="service-info">
+                                    <div class="service-name">ECOGRAFIA</div>
+                                    <div class="service-hours">
+                                        <div><span class="time-label">Mañana:</span> <span class="time-text">07:00 a 13:00</span></div>
+                                        <div><span class="time-label">Tarde:</span> <span class="time-text">13:00 a 19:00</span></div>
+                                    </div>
+                                    <button class="view-appointments-btn">Ver Fichas y Pacientes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Modal for Appointments -->
+                <div id="appointmentModal" class="modal">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3 class="modal-title" id="modalTitle">Gestión de Fichas</h3>
+                            <span class="close" onclick="closeAppointmentModal()">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <div class="shift-tabs">
+                                <button class="shift-tab active" onclick="switchShift('morning')">Turno Mañana</button>
+                                <button class="shift-tab" onclick="switchShift('afternoon')">Turno Tarde</button>
+                            </div>
+                            
+                            <div class="appointments-container">
+                                <div class="appointments-header">
+                                    <h4 id="shiftTitle">Turno Mañana</h4>
+                                    <div>
+                                        <span class="available-slots" id="availableSlots">20 fichas disponibles</span>
+                                        <button class="export-btn" onclick="exportToExcel()">📊 Exportar a Excel</button>
+                                        <button class="export-btn" onclick="exportToPDF()">📄 Exportar a PDF</button>
+                                    </div>
+                                </div>
+                                
+                                <div class="appointment-grid" id="appointmentGrid">
+                                    <!-- Las fichas se generan dinámicamente -->
+                                </div>
+                                
+                                <div class="patient-form" id="patientForm" style="display: none;">
+                                    <h5>Registrar Nuevo Paciente</h5>
+                                    <div class="form-group">
+                                        <label for="patientName">Nombre Completo:</label>
+                                        <input type="text" id="patientName" placeholder="Ingrese el nombre completo">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="patientCI">Cédula de Identidad:</label>
+                                        <input type="text" id="patientCI" placeholder="Ingrese la CI">
+                                    </div>
+                                    <div class="form-group">
+                                        <label for="patientPhone">Teléfono:</label>
+                                        <input type="text" id="patientPhone" placeholder="Ingrese el teléfono">
+                                    </div>
+                                    <div class="form-actions">
+                                        <button class="btn btn-secondary" onclick="cancelPatientForm()">Cancelar</button>
+                                        <button class="btn btn-primary" onclick="savePatient()">Guardar Paciente</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Reclamos y Sugerencias Section -->
+                <section id="reclamos" class="reclamos-section scroll-animation">
+                    <h2 class="section-title">Reclamos y Sugerencias</h2>
+                    <div class="reclamos-container">
+                        <p style="margin-bottom: 1rem; color: #374151;">¿Tienes algún reclamo o sugerencia? Por favor déjanos tu comentario:</p>
+                        
+                        <form class="reclamos-form" id="reclamosForm">
+                            <input type="text" placeholder="Nombre (opcional)" class="reclamos-input">
+                            <textarea required placeholder="¿Cuál es tu reclamo o sugerencia?" rows="4" class="reclamos-input reclamos-textarea"></textarea>
+                            <button type="submit" class="reclamos-submit">Enviar</button>
+                        </form>
+
+                        <!-- Mapa virtual -->
+                        <div class="map-section">
+                            <h3 class="map-title">Ubicación del establecimiento</h3>
+                            <div class="map-container">
+                                <iframe
+                                    title="Ubicación Centro de Salud Belén"
+                                    class="map-iframe"
+                                    loading="lazy"
+                                    allowfullscreen
+                                    src="https://www.google.com/maps?q=-19.02495338,-65.3015633&z=17&output=embed">
+                                </iframe>
+                            </div>
+                        </div>
+
+                        <!-- Enhanced Features -->
+                        <div class="enhanced-features">
+                            <h3 class="features-title">💬 Más Formas de Contacto</h3>
+                            <div class="features-grid">
+                                <div class="feature-item">
+                                    <span class="feature-icon">📞</span>
+                                    <span class="feature-text">+591 4-123-4567</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">🚑</span>
+                                    <span class="feature-text">Emergencias 24/7</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">📧</span>
+                                    <span class="feature-text">info@centrosaludbelen.bo</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">💬</span>
+                                    <span class="feature-text">WhatsApp: +591 70317124</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">🕒</span>
+                                    <span class="feature-text">Lun-Vie: 7:00-19:00</span>
+                                </div>
+                                <div class="feature-item">
+                                    <span class="feature-icon">📍</span>
+                                    <span class="feature-text">Barrio Belén, Sucre-Bolivia</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <!-- Appointments Section -->
+        <div id="appointments-section" class="section" style="display: none;">
+            <div class="section-container">
+                <div class="section-header">
+                    <h1>📅 Gestión de Citas Médicas</h1>
+                    <p>Sistema de administración de citas y turnos</p>
+                </div>
+                <div class="section-content">
+                    <div class="tab-navigation">
+                        <button class="tab-button active" onclick="openTab(event, 'appointment-management')">Gestión de Citas</button>
+                        <button class="tab-button" onclick="openTab(event, 'appointment-reports')">Reportes</button>
+                    </div>
+                    
+                    <div id="appointment-management" class="tab-content active">
+                        <h2>Gestión de Citas Médicas</h2>
+                        <p>Seleccione un servicio para gestionar las citas:</p>
+                        
+                        <div class="services-grid">
+                            <!-- Odontología -->
+                            <div class="service-card" onclick="openAppointmentModal('ODONTOLOGIA')">
+                                <div class="service-icon-container">
+                                    <div class="service-icon">🦷</div>
+                                </div>
+                                <div class="service-info">
+                                    <div class="service-name">ODONTOLOGIA</div>
+                                    <div class="service-hours">
+                                        <div><span class="time-label">Mañana:</span> <span class="time-text">07:00 a 13:00</span></div>
+                                        <div><span class="time-label">Tarde:</span> <span class="time-text">13:00 a 19:00</span></div>
+                                    </div>
+                                    <button class="view-appointments-btn">Ver Fichas y Pacientes</button>
+                                </div>
+                            </div>
+
+                            <!-- Vacunas PAI -->
+                            <div class="service-card" onclick="openAppointmentModal('VACUNAS PAI')">
+                                <div class="service-icon-container">
+                                    <div class="service-icon">💉</div>
+                                </div>
+                                <div class="service-info">
+                                    <div class="service-name">VACUNAS PAI</div>
+                                    <div class="service-hours">
+                                        <div><span class="time-label">Mañana:</span> <span class="time-text">08:00 a 14:00</span></div>
+                                        <div><span class="time-label">Tarde:</span> <span class="time-text">14:00 a 17:00</span></div>
+                                    </div>
+                                    <button class="view-appointments-btn">Ver Fichas y Pacientes</button>
+                                </div>
+                            </div>
+
+                            <!-- Urgencias -->
+                            <div class="service-card" onclick="openAppointmentModal('URGENCIAS')">
+                                <div class="service-icon-container">
+                                    <div class="service-icon">🚑</div>
+                                </div>
+                                <div class="service-info">
+                                    <div class="service-name">URGENCIAS</div>
+                                    <div class="service-24h">ATENCIÓN LAS 24 HORAS</div>
+                                    <button class="view-appointments-btn">Ver Fichas y Pacientes</button>
+                                </div>
+                            </div>
+
+                            <!-- Consulta Externa -->
+                            <div class="service-card" onclick="openAppointmentModal('CONSULTA EXTERNA')">
+                                <div class="service-icon-container">
+                                    <div class="service-icon">🩺</div>
+                                </div>
+                                <div class="service-info">
+                                    <div class="service-name">CONSULTA EXTERNA MED. 1-2</div>
+                                    <div class="service-hours">
+                                        <div><span class="time-label">Mañana:</span> <span class="time-text">07:00 a 13:00</span></div>
+                                        <div><span class="time-label">Tarde:</span> <span class="time-text">13:00 a 19:00</span></div>
+                                    </div>
+                                    <button class="view-appointments-btn">Ver Fichas y Pacientes</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="appointment-reports" class="tab-content">
+                        <h2>Reportes de Citas</h2>
+                        <p>Generar reportes de citas médicas:</p>
+                        <button class="btn btn-success" onclick="generateAppointmentReport()">📊 Generar Reporte de Citas</button>
+                        <button class="btn btn-info" onclick="exportAllAppointments()">📤 Exportar Todas las Citas</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- PAP System Section -->
+        <div id="pap-section" class="section" style="display: none;">
+            <div class="section-container">
+                <div class="section-header">
+                    <h1>🔍 Sistema de Gestión de Informes de Pruebas PAP</h1>
+                    <p>Búsqueda, consulta y eliminación de resultados de Papanicolaou</p>
+                    <p>Capacidad de almacenamiento: 3,000 pacientes</p>
+                </div>
+                
+                <div class="stats-container-pap">
+                    <div class="stat-card-pap">
+                        <div class="icon">📊</div>
+                        <div class="number" id="storedReports">0</div>
+                        <div class="label">Informes Almacenados</div>
+                    </div>
+                    <div class="stat-card-pap">
+                        <div class="icon">💾</div>
+                        <div class="number" id="totalCapacity">3,000</div>
+                        <div class="label">Capacidad Total</div>
+                    </div>
+                    <div class="stat-card-pap">
+                        <div class="icon">📈</div>
+                        <div class="number" id="usagePercentage">0%</div>
+                        <div class="label">Uso del Sistema</div>
+                    </div>
+                    <div class="stat-card-pap">
+                        <div class="icon">✅</div>
+                        <div class="number" id="availableSpace">3,000</div>
+                        <div class="label">Espacio Disponible</div>
+                    </div>
+                </div>
+                
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill" style="width: 0%;">0% Utilizado</div>
+                </div>
+                
+                <div class="section-content">
+                    <div class="tab-navigation">
+                        <button class="tab-button active" onclick="openTab(event, 'pap-list')">Lista de Informes</button>
+                        <button class="tab-button" onclick="openTab(event, 'pap-delete')">Eliminar Informe</button>
+                        <button class="tab-button" onclick="openTab(event, 'pap-import')">Importar/Exportar</button>
+                        <button class="tab-button" onclick="openTab(event, 'pap-batch')">Agregar Lotes</button>
+                    </div>
+                    
+                    <div id="pap-list" class="tab-content">
+                        <h2 class="section-title">📋 Lista de Informes PAP</h2>
+                        
+                        <!-- Search functionality -->
+                        <div class="form-group">
+                            <label>Buscar por Nombre del Paciente:</label>
+                            <input type="text" id="searchNombre" class="form-control" placeholder="Ingrese el nombre del paciente" onkeyup="filtrarInformes()">
+                        </div>
+                        <div class="form-group">
+                            <label>Buscar por Carnet de Identidad:</label>
+                            <input type="text" id="searchCI" class="form-control" placeholder="Ingrese el CI" onkeyup="filtrarInformes()">
+                        </div>
+                        
+                        <div id="listaInformes">
+                            <table id="tablaInformes">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>CI</th>
+                                        <th>Fecha de Examen</th>
+                                        <th>Resultado</th>
+                                        <th>Acciones</th>
+                                        <th>Corregir</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="cuerpoTabla">
+                                    <!-- Data will be populated here -->
+                                </tbody>
+                            </table>
+                            <div id="noDataMessage" class="no-data">No hay informes registrados</div>
+                        </div>
+                    </div>
+                    
+                    <div id="pap-delete" class="tab-content">
+                        <h2 class="section-title">🗑️ Eliminar Informe</h2>
+                        <div class="form-group">
+                            <label>CI del Paciente a Eliminar:</label>
+                            <input type="text" id="ciEliminar" class="form-control" placeholder="Ingrese el CI del paciente">
+                        </div>
+                        <div class="warning">
+                            <strong>⚠️ Advertencia:</strong> Esta acción no se puede deshacer
+                        </div>
+                        <button class="btn btn-danger" onclick="eliminarInforme()">🗑️ Eliminar Informe</button>
+                    </div>
+                    
+                    <div id="pap-import" class="tab-content">
+                        <h2 class="section-title">📥 Exportar e Importar Base de Datos PAP</h2>
+                        
+                        <h3><strong>Descargar Base de Datos Completa</strong></h3>
+                        <div class="btn-group">
+                            <button class="btn btn-success" onclick="descargarExcelPAP()">📊 Descargar Excel - Informes PAP</button>
+                        </div>
+                        
+                        <h3 style="margin-top: 30px;"><strong>Cargar/Actualizar Base de Datos</strong></h3>
+                        <div class="form-group">
+                            <label>📎 Seleccionar Archivo Excel</label>
+                            <input type="file" id="archivoExcel" class="form-control" accept=".xlsx,.xls">
+                        </div>
+                        <div class="btn-group">
+                            <button class="btn btn-info" onclick="importarDatos()">⬆️ Importar Datos PAP</button>
+                            <button class="btn btn-primary" onclick="descargarPlantilla()">📋 Descargar Plantilla PAP</button>
+                        </div>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <strong>📊 Estadísticas:</strong> <span id="statsText">0 informes almacenados de 3,000 disponibles</span>
+                        </div>
+                    </div>
+                    
+                    <div id="pap-batch" class="tab-content">
+                        <h2 class="section-title">📦 Agregar Lotes de Informes PAP</h2>
+                        <p>Agregue múltiples informes PAP al mismo tiempo ingresando los datos a continuación:</p>
+                        
+                        <div class="form-group">
+                            <label>Datos de los Pacientes (uno por línea, formato: Nombre,CI,Fecha,Resultado,Observaciones):</label>
+                            <textarea id="batchData" class="form-control" rows="10" placeholder="Ejemplo:\nMaría López,12345678,2023-05-15,Normal,Sin alteraciones\nAna García,23456789,2023-06-20,Anormal,Requiere seguimiento"></textarea>
+                        </div>
+                        
+                        <div class="btn-group">
+                            <button class="btn btn-success" onclick="addBatchPAPRecords()">➕ Agregar Lote de Informes</button>
+                            <button class="btn btn-info" onclick="clearBatchData()">🧹 Limpiar Datos</button>
+                        </div>
+                        
+                        <div class="info-box" style="margin-top: 20px;">
+                            <strong>💡 Instrucciones:</strong>
+                            <ul>
+                                <li>Ingrese un registro por línea</li>
+                                <li>Use el formato: Nombre,CI,Fecha,Resultado,Observaciones</li>
+                                <li>La fecha debe estar en formato AAAA-MM-DD</li>
+                                <li>Los campos deben estar separados por comas</li>
+                                <li>El campo de observaciones es opcional</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de autenticación
+        let isAuthenticated = false;
+        let currentUser = '';
+        let pendingSlot = null;
+
+        const validCredentials = {
+            'admin': 'medico2024',
+            'doctor': 'salud123',
+            'enfermera': 'cuidados2024'
+        };
+
+        // Unified data management
+        let appointmentsData = {};
+        let papReports = [];
+
+        // Load all data from localStorage
+        function loadData() {
+            try {
+                // Load appointment data
+                const savedAppointments = localStorage.getItem('appointmentsData');
+                if (savedAppointments) {
+                    appointmentsData = JSON.parse(savedAppointments);
+                } else {
+                    initializeAppointmentsData();
+                }
+                
+                // Load PAP data
+                const savedPAP = localStorage.getItem('papReports');
+                if (savedPAP) {
+                    papReports = JSON.parse(savedPAP);
+                    console.log('Loaded PAP reports from localStorage:', papReports);
+                } else {
+                    initializePAPData();
+                    console.log('Initialized PAP reports with default data:', papReports);
+                }
+            } catch (e) {
+                console.error('Error loading data from localStorage:', e);
+                initializeAppointmentsData();
+                initializePAPData();
+            }
+        }
+
+        // Initialize appointments data with default structure
+        function initializeAppointmentsData() {
+            const services = ['ODONTOLOGIA', 'VACUNAS PAI', 'URGENCIAS', 'CONSULTA EXTERNA', 'LABORATORIO', 'GINECOLOGIA', 'PEDIATRIA', 'ECOGRAFIA'];
+            
+            services.forEach(service => {
+                appointmentsData[service] = {
+                    morning: Array.from({length: 20}, (_, i) => ({
+                        slotNumber: i + 1,
+                        patient: null
+                    })),
+                    afternoon: Array.from({length: 20}, (_, i) => ({
+                        slotNumber: i + 1,
+                        patient: null
+                    }))
+                };
+            });
+            
+            // Datos de ejemplo
+            appointmentsData['ODONTOLOGIA'].morning[0].patient = {
+                name: 'María González',
+                ci: '12345678',
+                phone: '70123456',
+                registeredBy: 'admin',
+                registeredAt: new Date().toLocaleString('es-ES')
+            };
+            appointmentsData['ODONTOLOGIA'].morning[2].patient = {
+            name: 'Juan Pérez',
+                ci: '87654321',
+                phone: '71234567',
+                registeredBy: 'doctor',
+                registeredAt: new Date().toLocaleString('es-ES')
+            };
+        }
+
+        // Initialize PAP data
+        function initializePAPData() {
+            papReports = [
+                { id: 1, nombre: "María López", ci: "12345678", fecha: "2023-05-15", resultado: "Normal", observaciones: "Sin alteraciones detectadas" },
+                { id: 2, nombre: "Ana García", ci: "23456789", fecha: "2023-06-20", resultado: "Anormal", observaciones: "Requiere seguimiento" },
+                { id: 3, nombre: "Laura Pérez", ci: "34567890", fecha: "2023-07-10", resultado: "Normal", observaciones: "Sin alteraciones detectadas" },
+                // Additional sample data
+                { id: 4, nombre: "Carmen Ruiz", ci: "45678901", fecha: "2023-08-05", resultado: "Normal", observaciones: "Sin alteraciones detectadas" },
+                { id: 5, nombre: "Sofía Martínez", ci: "56789012", fecha: "2023-08-18", resultado: "Anormal", observaciones: "Requiere seguimiento" },
+                { id: 6, nombre: "Elena González", ci: "67890123", fecha: "2023-09-02", resultado: "Normal", observaciones: "Sin alteraciones detectadas" },
+                { id: 7, nombre: "Patricia Jiménez", ci: "78901234", fecha: "2023-09-15", resultado: "Inconcluso", observaciones: "Repetir examen" },
+                { id: 8, nombre: "Isabel Rodríguez", ci: "89012345", fecha: "2023-09-28", resultado: "Normal", observaciones: "Sin alteraciones detectadas" }
+            ];
+            console.log('Initialized PAP data with', papReports.length, 'records');
+        }
+
+        // Save all data to localStorage
+        function saveData() {
+            try {
+                localStorage.setItem('appointmentsData', JSON.stringify(appointmentsData));
+                localStorage.setItem('papReports', JSON.stringify(papReports));
+            } catch (e) {
+                console.error('Error saving data to localStorage:', e);
+            }
+        }
+        
+
+
+        // Add a new PAP record to the database
+        function addPAPRecord(nombre, ci, fecha, resultado, observaciones) {
+            // Generate a new ID (find the max ID and add 1)
+            const newId = papReports.length > 0 ? Math.max(...papReports.map(r => r.id)) + 1 : 1;
+            
+            // Create the new record
+            const newRecord = {
+                id: newId,
+                nombre: nombre,
+                ci: ci,
+                fecha: fecha,
+                resultado: resultado,
+                observaciones: observaciones
+            };
+            
+            // Add to the database
+            papReports.push(newRecord);
+            
+            // Save to localStorage
+            saveData();
+            
+            // Update the UI
+            actualizarListaInformes();
+            actualizarEstadisticas();
+            
+            return newRecord;
+        }
+
+        // Add multiple PAP records at once
+        function addPAPRecordsBatch(records) {
+            if (!Array.isArray(records)) {
+                console.error('Records must be an array');
+                return [];
+            }
+            
+            const addedRecords = [];
+            
+            records.forEach(record => {
+                // Validate required fields
+                if (record.nombre && record.ci && record.fecha && record.resultado) {
+                    const newRecord = addPAPRecord(
+                        record.nombre,
+                        record.ci,
+                        record.fecha,
+                        record.resultado,
+                        record.observaciones || ''
+                    );
+                    addedRecords.push(newRecord);
+                } else {
+                    console.warn('Skipping invalid record:', record);
+                }
+            });
+            
+            if (addedRecords.length > 0) {
+                alert(`✅ ${addedRecords.length} registros agregados exitosamente a la base de datos PAP.`);
+            }
+            
+            return addedRecords;
+        }
+
+        // Initialize data when the page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+            actualizarEstadisticas();
+            actualizarListaInformes();
+            
+            // Enter en login
+            ['username', 'password'].forEach(id => {
+                document.getElementById(id).addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        authenticate();
+                    }
+                });
+            });
+
+            // Enter en formulario de pacientes
+            ['patientName', 'patientCI', 'patientPhone'].forEach(id => {
+                document.getElementById(id).addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        savePatient();
+                    }
+                });
+            });
+        });
+
+        function authenticate() {
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+            const loginError = document.getElementById('loginError');
+
+            if (!username || !password) {
+                showLoginError('⚠️ Por favor, complete todos los campos');
+                return;
+            }
+
+            if (validCredentials[username] && validCredentials[username] === password) {
+                isAuthenticated = true;
+                currentUser = username;
+                closeLoginModal();
+                document.getElementById('userInfo').style.display = 'block';
+                document.getElementById('loggedUser').textContent = `👤 Personal: ${username}`;
+                
+                if (pendingSlot) {
+                    showPatientFormAfterAuth(pendingSlot);
+                    pendingSlot = null;
+                }
+                
+                // If we're authenticating from the registration form, submit it
+                if (document.getElementById('registrationForm').querySelector('button[type="submit"]').disabled) {
+                    document.getElementById('registrationForm').querySelector('button[type="submit"]').disabled = false;
+                    document.getElementById('registrationForm').querySelector('button[type="submit"]').click();
+                }
+                
+                alert(`✅ Acceso concedido, ${username}!\n🏥 Ahora puede registrar nuevos pacientes.`);
+            } else {
+                showLoginError('❌ Usuario o contraseña incorrectos');
+                document.getElementById('password').value = '';
+            }
+        }
+
+        function closeLoginModal() {
+            document.getElementById('loginModal').style.display = 'none';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('loginError').style.display = 'none';
+            pendingSlot = null;
+        }
+
+        function showLoginError(message) {
+            const loginError = document.getElementById('loginError');
+            loginError.textContent = message;
+            loginError.style.display = 'block';
+            
+            const loginModal = document.getElementById('loginModal').querySelector('.modal-content');
+            loginModal.style.animation = 'shake 0.5s ease-in-out';
+            setTimeout(() => {
+                loginModal.style.animation = '';
+            }, 500);
+        }
+
+        function logout() {
+            if (confirm('🔐 ¿Cerrar sesión como personal médico?\n\n💡 Podrá seguir viendo las fichas, pero no podrá registrar nuevos pacientes.')) {
+                isAuthenticated = false;
+                currentUser = '';
+                document.getElementById('userInfo').style.display = 'none';
+                closeAppointmentModal();
+                alert('👋 Sesión cerrada. Ahora en modo visitante.');
+            }
+        }
+
+        // Sistema de gestión de citas
+        let currentService = '';
+        let currentShift = 'morning';
+        let currentSlot = null;
+
+        // Modify the savePatient function to save data after changes
+        function savePatient() {
+            if (!isAuthenticated) {
+                alert('🔒 Error: Sesión no válida. Inicie sesión nuevamente.');
+                closeAppointmentModal();
+                return;
+            }
+            
+            const name = document.getElementById('patientName').value.trim();
+            const ci = document.getElementById('patientCI').value.trim();
+            const phone = document.getElementById('patientPhone').value.trim();
+
+            if (!name || !ci || !phone) {
+                alert('⚠️ favor, complete todos los campos');
+                return;
+            }
+
+            const existingPatient = appointmentsData[currentService][currentShift].find(
+                apt => apt.patient && apt.patient.ci === ci
+            );
+
+            if (existingPatient) {
+                alert('❌ Ya existe un paciente registrado con esta CI en este turno');
+                return;
+            }
+
+            const slotIndex = currentSlot - 1;
+            appointmentsData[currentService][currentShift][slotIndex].patient = {
+                name,
+                ci,
+                phone,
+                registeredBy: currentUser,
+                registeredAt: new Date().toLocaleString('es-ES')
+            };
+
+            // Save to localStorage
+            saveData();
+
+            cancelPatientForm();
+            updateAppointmentView();
+            alert(`✅ Paciente ${name} registrado exitosamente en la ficha #${currentSlot}\n👤 Registrado por: ${currentUser}`);
+        }
+
+        // Modify the removePatient function to save data after changes
+        function removePatient(slotNumber) {
+            if (!isAuthenticated) {
+                alert('🔒 Solo el personal autorizado puede liberar fichas.\nSi es personal médico, inicie sesión primero.');
+                return;
+            }
+            
+            if (confirm('🔐 ¿Está seguro de que desea liberar esta ficha?\n\n⚠️ Esta acción no se puede deshacer.')) {
+                const slotIndex = slotNumber - 1;
+                appointmentsData[currentService][currentShift][slotIndex].patient = null;
+                
+                // Save to localStorage
+                saveData();
+                
+                updateAppointmentView();
+                alert(`✅ Ficha #${slotNumber} liberada exitosamente\n👤 Acción realizada por: ${currentUser}`);
+            }
+        }
+
+        // Modify the registration form submission to save data
+        document.getElementById('registrationForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Check if user is authenticated
+            if (!isAuthenticated) {
+                document.getElementById('loginModal').style.display = 'block';
+                document.getElementById('username').focus();
+                // Disable the submit button temporarily
+                const submitBtn = this.querySelector('.form-submit');
+                submitBtn.textContent = 'Autenticando...';
+                submitBtn.disabled = true;
+                return;
+            }
+            
+            const formData = new FormData(this);
+            const data = Object.fromEntries(formData);
+            
+            // Convert service name to match the appointment system
+            const serviceMapping = {
+                'odontologia': 'ODONTOLOGIA',
+                'Ginecologia': 'GINECOLOGIA',
+                'Pediatria': 'PEDIATRIA',
+                'Laboratorio': 'LABORATORIO',
+                'Ecografia': 'ECOGRAFIA',
+                'Medicina General': 'CONSULTA EXTERNA',
+                'Vacunas PAI': 'VACUNAS PAI',
+                'Emergencia': 'URGENCIAS'
+            };
+            
+            const serviceName = serviceMapping[data.servicio] || data.servicio.toUpperCase();
+            
+            // Use selected shift
+            const shift = data.turno || 'morning';
+            
+            // Find first available slot in the selected shift
+            let assigned = false;
+            let slotNumber = 0;
+            
+            if (appointmentsData[serviceName]) {
+                // First try the selected shift
+                for (let i = 0; i < appointmentsData[serviceName][shift].length; i++) {
+                    if (!appointmentsData[serviceName][shift][i].patient) {
+                        // Register patient in the first available slot
+                        appointmentsData[serviceName][shift][i].patient = {
+                            name: data.nombreCompleto,
+                            ci: data.ci,
+                            phone: data.telefono,
+                            registeredBy: currentUser,
+                            registeredAt: new Date().toLocaleString('es-ES'),
+                            seguro: data.seguro
+                        };
+                        assigned = true;
+                        slotNumber = i + 1;
+                        break;
+                    }
+                }
+                
+                // If no slots available in selected shift, try the other shift
+                if (!assigned) {
+                    const otherShift = shift === 'morning' ? 'afternoon' : 'morning';
+                    for (let i = 0; i < appointmentsData[serviceName][otherShift].length; i++) {
+                        if (!appointmentsData[serviceName][otherShift][i].patient) {
+                            appointmentsData[serviceName][otherShift][i].patient = {
+                                name: data.nombreCompleto,
+                                ci: data.ci,
+                                phone: data.telefono,
+                                registeredBy: currentUser,
+                                registeredAt: new Date().toLocaleString('es-ES'),
+                                seguro: data.seguro
+                            };
+                            assigned = true;
+                            slotNumber = i + 1;
+                            break;
+                        }
+                    }
+                }
+            }
+            
+            const submitBtn = this.querySelector('.form-submit');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.textContent = 'Registrando...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                if (assigned) {
+                    const shiftText = shift === 'morning' ? 'Mañana' : 'Tarde';
+                    alert(`¡Paciente registrado exitosamente!
+
+Nombre: ${data.nombreCompleto}
+CI: ${data.ci}
+Teléfono: ${data.telefono}
+Servicio: ${data.servicio}
+Seguro: ${data.seguro}
+Turno: ${shiftText}
+Ficha asignada: #${slotNumber}`);
+                    
+                    // Update the appointment view if the service modal is open
+                    if (currentService === serviceName) {
+                        updateAppointmentView();
+                    }
+                    
+                    // Save to localStorage
+                    saveData();
+                } else {
+                    alert(`¡Paciente registrado en lista de espera!
+
+Nombre: ${data.nombreCompleto}
+CI: ${data.ci}
+Teléfono: ${data.telefono}
+Servicio: ${data.servicio}
+Seguro: ${data.seguro}
+
+Nota: No hay fichas disponibles en este momento. Será contactado cuando haya disponibilidad.`);
+                }
+                
+                this.reset();
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        });
+
+        function openAppointmentModal(serviceName) {
+            currentService = serviceName;
+            document.getElementById('modalTitle').textContent = `Fichas de ${serviceName}`;
+            document.getElementById('appointmentModal').style.display = 'block';
+            currentShift = 'morning';
+            document.querySelectorAll('.shift-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.shift-tab')[0].classList.add('active');
+            updateAppointmentView();
+        }
+
+        function closeAppointmentModal() {
+            document.getElementById('appointmentModal').style.display = 'none';
+            document.getElementById('patientForm').style.display = 'none';
+        }
+
+        function switchShift(shift) {
+            currentShift = shift;
+            document.querySelectorAll('.shift-tab').forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById('shiftTitle').textContent = shift === 'morning' ? 'Turno Mañana' : 'Turno Tarde';
+            updateAppointmentView();
+        }
+
+        function updateAppointmentView() {
+            const appointmentGrid = document.getElementById('appointmentGrid');
+            const appointments = appointmentsData[currentService][currentShift];
+            const availableCount = appointments.filter(apt => !apt.patient).length;
+            
+            document.getElementById('availableSlots').textContent = `${availableCount} fichas disponibles de 20`;
+
+            appointmentGrid.innerHTML = `
+                <div class="visitor-info">
+                    ${isAuthenticated ? 
+                        `👨‍⚕️ Personal autorizado: ${currentUser} - Puede registrar pacientes` : 
+                        `👥 Modo visitante - Solo visualización de fichas`
+                    }
+                </div>
+            `;
+
+            appointments.forEach(appointment => {
+                const slotDiv = document.createElement('div');
+                slotDiv.className = `appointment-slot ${appointment.patient ? 'occupied' : ''}`;
+                
+                let patientInfo = '';
+                if (appointment.patient) {
+                    patientInfo = `
+                        <strong>${appointment.patient.name}</strong><br>
+                        CI: ${appointment.patient.ci}<br>
+                        Tel: ${appointment.patient.phone}
+                        ${appointment.patient.seguro ? `<br>Seguro: ${appointment.patient.seguro}` : ''}
+                        ${appointment.patient.registeredBy ? `<br><small>👤 Por: ${appointment.patient.registeredBy}</small>` : ''}
+                        ${appointment.patient.registeredAt ? `<br><small>🕒 ${appointment.patient.registeredAt}</small>` : ''}
+                    `;
+                } else {
+                    patientInfo = 'Ficha disponible';
+                }
+
+                let actionButtons = '';
+                if (!appointment.patient) {
+                    actionButtons = isAuthenticated ? 
+                        `<button class="add-patient-btn" onclick="showPatientForm(${appointment.slotNumber})">
+                            Asignar Paciente
+                        </button>` :
+                        `<button class="add-patient-btn public-view" onclick="requestAuth(${appointment.slotNumber})">
+                            🔐 Asignar Paciente (Personal)
+                        </button>`;
+                } else {
+                    if (isAuthenticated) {
+                        actionButtons = `<button class="add-patient-btn" style="background: #ff6b6b;" onclick="removePatient(${appointment.slotNumber})">
+                            Liberar Ficha
+                        </button>`;
+                    } else {
+                        actionButtons = `<div class="staff-only-action">
+                            🔒 Solo personal puede liberar fichas
+                        </div>`;
+                    }
+                }
+
+                slotDiv.innerHTML = `
+                    <div class="slot-number">Ficha #${appointment.slotNumber}</div>
+                    <div class="patient-info ${!appointment.patient ? 'empty' : ''}">
+                        ${patientInfo}
+                    </div>
+                    ${actionButtons}
+                `;
+                
+                appointmentGrid.appendChild(slotDiv);
+            });
+        }
+
+        function requestAuth(slotNumber) {
+            pendingSlot = slotNumber;
+            document.getElementById('loginModal').style.display = 'block';
+            document.getElementById('username').focus();
+        }
+
+        function showPatientForm(slotNumber) {
+            if (!isAuthenticated) {
+                requestAuth(slotNumber);
+                return;
+            }
+            currentSlot = slotNumber;
+            document.getElementById('patientForm').style.display = 'block';
+            document.getElementById('patientName').focus();
+        }
+
+        function showPatientFormAfterAuth(slotNumber) {
+            currentSlot = slotNumber;
+            document.getElementById('patientForm').style.display = 'block';
+            document.getElementById('patientName').focus();
+        }
+
+        function cancelPatientForm() {
+            document.getElementById('patientForm').style.display = 'none';
+            document.getElementById('patientName').value = '';
+            document.getElementById('patientCI').value = '';
+            document.getElementById('patientPhone').value = '';
+            currentSlot = null;
+        }
+
+        // Función para exportar a Excel
+        function exportToExcel() {
+            if (typeof XLSX === 'undefined') {
+                alert('⚠️ Error: La librería de Excel no está cargada correctamente.');
+                return;
+            }
+
+            const appointments = appointmentsData[currentService][currentShift];
+            const shiftName = currentShift === 'morning' ? 'Mañana' : 'Tarde';
+            
+            // Preparar datos para Excel
+            const excelData = appointments.map(apt => {
+                if (apt.patient) {
+                    return {
+                        'Ficha': apt.slotNumber,
+                        'Nombre': apt.patient.name,
+                        'CI': apt.patient.ci,
+                        'Teléfono': apt.patient.phone,
+                        'Seguro': apt.patient.seguro || 'N/A',
+                        'Registrado por': apt.patient.registeredBy || 'N/A',
+                        'Fecha/Hora': apt.patient.registeredAt || 'N/A',
+                        'Estado': 'Ocupada'
+                    };
+                } else {
+                    return {
+                        'Ficha': apt.slotNumber,
+                        'Nombre': '-',
+                        'CI': '-',
+                        'Teléfono': '-',
+                        'Seguro': '-',
+                        'Registrado por': '-',
+                        'Fecha/Hora': '-',
+                        'Estado': 'Disponible'
+                    };
+                }
+            });
+
+            // Crear libro de trabajo
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(excelData);
+
+            // Ajustar ancho de columnas
+            const colWidths = [
+                { wch: 8 },  // Ficha
+                { wch: 25 }, // Nombre
+                { wch: 12 }, // CI
+                { wch: 15 }, // Teléfono
+                { wch: 12 }, // Seguro
+                { wch: 18 }, // Registrado por
+                { wch: 20 }, // Fecha/Hora
+                { wch: 12 }  // Estado
+            ];
+            ws['!cols'] = colWidths;
+
+            // Agregar hoja al libro
+            XLSX.utils.book_append_sheet(wb, ws, `Turno ${shiftName}`);
+
+            // Generar nombre de archivo
+            const fecha = new Date().toLocaleDateString('es-ES').replace(/\//g, '-');
+            const fileName = `${currentService}_Turno_${shiftName}_${fecha}.xlsx`;
+
+            // Descargar archivo
+            XLSX.writeFile(wb, fileName);
+            
+            alert(`✅ Archivo Excel exportado exitosamente:\n${fileName}`);
+        }
+
+        function exportToPDF() {
+            alert('Funcionalidad de exportación a PDF no implementada en esta demostración.\nEn una implementación real, esto generaría y descargaría un archivo PDF con los datos de las fichas.');
+        }
+
+        function generateAppointmentReport() {
+            alert('Funcionalidad de generación de reportes no implementada en esta demostración.\nEn una implementación real, esto generaría un reporte detallado de todas las citas médicas.');
+        }
+
+        function exportAllAppointments() {
+            alert('Funcionalidad de exportación de todas las citas no implementada en esta demostración.\nEn una implementación real, esto exportaría todas las citas médicas registradas.');
+        }
+
+        // PAP System Functions
+        function actualizarEstadisticas() {
+            const total = 3000;
+            const almacenados = papReports.length;
+            const porcentaje = ((almacenados / total) * 100).toFixed(1);
+            const disponibles = total - almacenados;
+            
+            document.getElementById('storedReports').textContent = almacenados.toLocaleString();
+            document.getElementById('totalCapacity').textContent = total.toLocaleString();
+            document.getElementById('usagePercentage').textContent = porcentaje + '%';
+            document.getElementById('availableSpace').textContent = disponibles.toLocaleString();
+            document.getElementById('progressFill').style.width = porcentaje + '%';
+            document.getElementById('progressFill').textContent = porcentaje + '% Utilizado';
+            document.getElementById('statsText').textContent = `${almacenados.toLocaleString()} informes almacenados de ${total.toLocaleString()} disponibles`;
+        }
+        
+        function actualizarListaInformes() {
+            console.log('Updating PAP list with', papReports.length, 'records');
+            const cuerpoTabla = document.getElementById('cuerpoTabla');
+            const noDataMessage = document.getElementById('noDataMessage');
+            
+            // Clear existing data
+            cuerpoTabla.innerHTML = '';
+            
+            if (papReports.length === 0) {
+                noDataMessage.style.display = 'block';
+                return;
+            }
+            
+            noDataMessage.style.display = 'none';
+            
+            // Populate table with data
+            papReports.forEach(report => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${report.nombre}</td>
+                    <td>${report.ci}</td>
+                    <td>${report.fecha}</td>
+                    <td><span style="font-weight: bold; color: ${report.resultado === 'Normal' ? 'green' : report.resultado === 'Anormal' ? 'red' : 'orange'}">${report.resultado}</span></td>
+                    <td>
+                        <button class="btn btn-primary" onclick="verDetalleModal(${report.id})">Ver</button>
+                        <button class="btn btn-danger" onclick="eliminarInformePorId(${report.id})">Eliminar</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-warning" onclick="corregirInforme(${report.id})">Corregir</button>
+                    </td>
+                `;
+                cuerpoTabla.appendChild(row);
+            });
+        }
+        
+        // Filter PAP reports based on search criteria
+        function filtrarInformes() {
+            const nombre = document.getElementById('searchNombre').value.trim().toLowerCase();
+            const ci = document.getElementById('searchCI').value.trim();
+            
+            // If no search criteria, show all reports
+            if (!nombre && !ci) {
+                actualizarListaInformes();
+                return;
+            }
+            
+            // Filter reports based on search criteria
+            const filteredReports = papReports.filter(report => {
+                const nombreMatch = nombre === '' || report.nombre.toLowerCase().includes(nombre);
+                const ciMatch = ci === '' || report.ci.includes(ci);
+                
+                return nombreMatch && ciMatch;
+            });
+            
+            // Update the table with filtered results
+            const cuerpoTabla = document.getElementById('cuerpoTabla');
+            const noDataMessage = document.getElementById('noDataMessage');
+            
+            // Clear existing data
+            cuerpoTabla.innerHTML = '';
+            
+            if (filteredReports.length === 0) {
+                noDataMessage.style.display = 'block';
+                noDataMessage.innerHTML = 'No se encontraron informes que coincidan con los criterios de búsqueda';
+                return;
+            }
+            
+            noDataMessage.style.display = 'none';
+            
+            // Populate table with filtered data
+            filteredReports.forEach(report => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${report.nombre}</td>
+                    <td>${report.ci}</td>
+                    <td>${report.fecha}</td>
+                    <td><span style="font-weight: bold; color: ${report.resultado === 'Normal' ? 'green' : report.resultado === 'Anormal' ? 'red' : 'orange'}">${report.resultado}</span></td>
+                    <td>
+                        <button class="btn btn-primary" onclick="verDetalleModal(${report.id})">Ver</button>
+                        <button class="btn btn-danger" onclick="eliminarInformePorId(${report.id})">Eliminar</button>
+                    </td>
+                    <td>
+                        <button class="btn btn-warning" onclick="corregirInforme(${report.id})">Corregir</button>
+                    </td>
+                `;
+                cuerpoTabla.appendChild(row);
+            });
+        }
+        
+
+        
+
+        
+        // Modal detailed view function
+        function verDetalleModal(id) {
+            const report = papReports.find(r => r.id === id);
+            if (report) {
+                // Create modal if it doesn't exist
+                let modal = document.getElementById('detalleModal');
+                if (!modal) {
+                    modal = document.createElement('div');
+                    modal.id = 'detalleModal';
+                    modal.className = 'modal';
+                    modal.innerHTML = `
+                        <div class="modal-content" style="max-width: 600px;">
+                            <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <h3 class="modal-title">Detalles del Informe PAP</h3>
+                                <span class="close" onclick="cerrarModalDetalle()">&times;</span>
+                            </div>
+                            <div class="modal-body" id="modalDetalleBody">
+                                <!-- Content will be populated here -->
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                }
+                
+                // Populate modal content
+                document.getElementById('modalDetalleBody').innerHTML = `
+                    <div style="padding: 20px;">
+                        <div style="text-align: center; margin-bottom: 20px;">
+                            <h2 style="color: #667eea; margin-bottom: 10px;">${report.nombre}</h2>
+                            <p style="font-size: 1.1em;"><strong>CI:</strong> ${report.ci}</p>
+                        </div>
+                        
+                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                            <h3 style="color: #333; border-bottom: 2px solid #667eea; padding-bottom: 10px;">Información del Examen</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 15px;">
+                                <div>
+                                    <p><strong>Fecha de Examen:</strong></p>
+                                    <p>${report.fecha}</p>
+                                </div>
+                                <div>
+                                    <p><strong>Resultado:</strong></p>
+                                    <p style="font-weight: bold; font-size: 1.2em; color: ${report.resultado === 'Normal' ? 'green' : report.resultado === 'Anormal' ? 'red' : 'orange'};">${report.resultado}</p>
+                                </div>
+                            </div>
+                            
+                            <div style="margin-top: 20px;">
+                                <p><strong>Observaciones:</strong></p>
+                                <p style="background: white; padding: 10px; border-radius: 5px; border-left: 4px solid #667eea;">${report.observaciones || 'No hay observaciones registradas para este examen.'}</p>
+                            </div>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button class="btn btn-secondary" onclick="cerrarModalDetalle()">Cerrar</button>
+                            <button class="btn btn-danger" onclick="eliminarInformePorId(${report.id})">Eliminar Informe</button>
+                        </div>
+                    </div>
+                `;
+                
+                // Show modal
+                modal.style.display = 'block';
+            }
+        }
+        
+        // Close detail modal
+        function cerrarModalDetalle() {
+            const modal = document.getElementById('detalleModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        function eliminarInforme() {
+            const ci = document.getElementById('ciEliminar').value.trim();
+            
+            if (!ci) {
+                alert('Por favor ingrese el CI del paciente');
+                return;
+            }
+            
+            const index = papReports.findIndex(report => report.ci === ci);
+            
+            if (index === -1) {
+                alert('No se encontró ningún informe con ese CI');
+                return;
+            }
+            
+            if (confirm('¿Está seguro de eliminar este informe? Esta acción no se puede deshacer.')) {
+                papReports.splice(index, 1);
+                alert('Informe eliminado exitosamente');
+                document.getElementById('ciEliminar').value = '';
+                actualizarListaInformes();
+                actualizarEstadisticas();
+                saveData();
+            }
+        }
+        
+        function eliminarInformePorId(id) {
+            const index = papReports.findIndex(report => report.id === id);
+            
+            if (index === -1) {
+                alert('No se encontró el informe');
+                return;
+            }
+            
+            if (confirm('¿Está seguro de eliminar este informe? Esta acción no se puede deshacer.')) {
+                papReports.splice(index, 1);
+                alert('Informe eliminado exitosamente');
+                actualizarListaInformes();
+                actualizarEstadisticas();
+                saveData();
+                
+
+            }
+        }
+        
+        // Function to correct/edit PAP report data
+        function corregirInforme(id) {
+            // Check if user is authenticated as admin
+            if (!isAuthenticated || currentUser !== 'admin') {
+                // Show login modal for admin authentication
+                showAdminLoginModal(id);
+                return;
+            }
+            
+            openCorrectionModal(id);
+        }
+        
+        // Function to show admin login modal
+        function showAdminLoginModal(reportId) {
+            // Create login modal if it doesn't exist
+            let modal = document.getElementById('adminLoginModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'adminLoginModal';
+                modal.className = 'modal';
+                modal.innerHTML = `
+                    <div class="modal-content" style="max-width: 400px;">
+                        <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                            <h3 class="modal-title">🔐 Autenticación Requerida</h3>
+                            <span class="close" onclick="cerrarModalAdminLogin()">&times;</span>
+                        </div>
+                        <div class="modal-body" id="modalAdminLoginBody">
+                            <!-- Content will be populated here -->
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(modal);
+            }
+            
+            // Populate modal content with login form
+            document.getElementById('modalAdminLoginBody').innerHTML = `
+                <div style="padding: 20px;">
+                    <h3 style="color: #667eea; margin-bottom: 20px; text-align: center;">Autenticación de Administrador</h3>
+                    <p style="text-align: center; margin-bottom: 20px;">Se requiere autenticación de administrador para corregir informes</p>
+                    
+                    <div class="form-group">
+                        <label><strong>Usuario:</strong></label>
+                        <input type="text" id="adminUsername" class="form-control" placeholder="Ingrese usuario" value="admin">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label><strong>Contraseña:</strong></label>
+                        <input type="password" id="adminPassword" class="form-control" placeholder="Ingrese contraseña">
+                    </div>
+                    
+                    <div id="adminLoginError" style="color: red; text-align: center; margin: 10px 0; display: none;"></div>
+                    
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn btn-secondary" onclick="cerrarModalAdminLogin()">Cancelar</button>
+                        <button class="btn btn-primary" onclick="validateAdminLogin(${reportId})">Iniciar Sesión</button>
+                    </div>
+                </div>
+            `;
+            
+            // Show modal
+            modal.style.display = 'block';
+        }
+        
+        // Function to close admin login modal
+        function cerrarModalAdminLogin() {
+            const modal = document.getElementById('adminLoginModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // Function to validate admin login
+        function validateAdminLogin(reportId) {
+            const username = document.getElementById('adminUsername').value.trim();
+            const password = document.getElementById('adminPassword').value;
+            const errorDiv = document.getElementById('adminLoginError');
+            
+            // Check credentials (admin with medico2024)
+            if (username === 'admin' && password === 'medico2024') {
+                // Authentication successful
+                isAuthenticated = true;
+                currentUser = 'admin';
+                
+                // Close login modal
+                cerrarModalAdminLogin();
+                
+                // Open correction modal
+                openCorrectionModal(reportId);
+            } else {
+                // Authentication failed
+                errorDiv.textContent = 'Usuario o contraseña incorrectos';
+                errorDiv.style.display = 'block';
+                
+                // Clear password field
+                document.getElementById('adminPassword').value = '';
+            }
+        }
+        
+        // Function to open correction modal
+        function openCorrectionModal(id) {
+            const report = papReports.find(r => r.id === id);
+            if (report) {
+                // Create correction modal if it doesn't exist
+                let modal = document.getElementById('correccionModal');
+                if (!modal) {
+                    modal = document.createElement('div');
+                    modal.id = 'correccionModal';
+                    modal.className = 'modal';
+                    modal.innerHTML = `
+                        <div class="modal-content" style="max-width: 600px;">
+                            <div class="modal-header" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                <h3 class="modal-title">Corregir Informe PAP</h3>
+                                <span class="close" onclick="cerrarModalCorreccion()">&times;</span>
+                            </div>
+                            <div class="modal-body" id="modalCorreccionBody">
+                                <!-- Content will be populated here -->
+                            </div>
+                        </div>
+                    `;
+                    document.body.appendChild(modal);
+                }
+                
+                // Populate modal content with form
+                document.getElementById('modalCorreccionBody').innerHTML = `
+                    <div style="padding: 20px;">
+                        <h3 style="color: #667eea; margin-bottom: 20px; text-align: center;">Editar Informe de ${report.nombre}</h3>
+                        <p style="text-align: center; color: #667eea; margin-bottom: 15px;">Autenticado como: ${currentUser}</p>
+                        
+                        <div class="form-group">
+                            <label><strong>Nombre del Paciente:</strong></label>
+                            <input type="text" id="editNombre" class="form-control" value="${report.nombre}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><strong>Carnet de Identidad:</strong></label>
+                            <input type="text" id="editCI" class="form-control" value="${report.ci}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><strong>Fecha de Examen:</strong></label>
+                            <input type="date" id="editFecha" class="form-control" value="${report.fecha}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><strong>Resultado:</strong></label>
+                            <select id="editResultado" class="form-control">
+                                <option value="Normal" ${report.resultado === 'Normal' ? 'selected' : ''}>Normal</option>
+                                <option value="Anormal" ${report.resultado === 'Anormal' ? 'selected' : ''}>Anormal</option>
+                                <option value="Inconcluso" ${report.resultado === 'Inconcluso' ? 'selected' : ''}>Inconcluso</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label><strong>Observaciones:</strong></label>
+                            <textarea id="editObservaciones" class="form-control" rows="4">${report.observaciones || ''}</textarea>
+                        </div>
+                        
+                        <div style="text-align: center; margin-top: 20px;">
+                            <button class="btn btn-secondary" onclick="cerrarModalCorreccion()">Cancelar</button>
+                            <button class="btn btn-primary" onclick="guardarCorreccion(${report.id})">Guardar Cambios</button>
+                        </div>
+                    </div>
+                `;
+                
+                // Show modal
+                modal.style.display = 'block';
+            }
+        }
+        
+        // Function to close correction modal
+        function cerrarModalCorreccion() {
+            const modal = document.getElementById('correccionModal');
+            if (modal) {
+                modal.style.display = 'none';
+            }
+        }
+        
+        // Function to save corrections
+        function guardarCorreccion(id) {
+            const report = papReports.find(r => r.id === id);
+            if (report) {
+                // Get updated values from form
+                const nombre = document.getElementById('editNombre').value.trim();
+                const ci = document.getElementById('editCI').value.trim();
+                const fecha = document.getElementById('editFecha').value;
+                const resultado = document.getElementById('editResultado').value;
+                const observaciones = document.getElementById('editObservaciones').value.trim();
+                
+                // Validate required fields
+                if (!nombre || !ci || !fecha || !resultado) {
+                    alert('Por favor complete todos los campos obligatorios');
+                    return;
+                }
+                
+                // Update report data
+                report.nombre = nombre;
+                report.ci = ci;
+                report.fecha = fecha;
+                report.resultado = resultado;
+                report.observaciones = observaciones;
+                
+                // Save to localStorage
+                saveData();
+                
+                // Update the table view
+                actualizarListaInformes();
+                
+                // Close modal
+                cerrarModalCorreccion();
+                
+                // Show success message
+                alert('Informe actualizado exitosamente');
+            }
+        }
+        
+        // Save all data to localStorage
+        function saveData() {
+            try {
+                localStorage.setItem('appointmentsData', JSON.stringify(appointmentsData));
+                localStorage.setItem('papReports', JSON.stringify(papReports));
+                
+                // Automatically export to Excel with current date
+                exportToExcelWithDate();
+            } catch (e) {
+                console.error('Error saving data to localStorage:', e);
+            }
+        }
+        
+        // Function to automatically export PAP data to Excel with current date
+        function exportToExcelWithDate() {
+            if (typeof XLSX === 'undefined') {
+                console.warn('Excel library not loaded');
+                return;
+            }
+            
+            // Format current date as DD-MM-YYYY
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            const formattedDate = `${day}-${month}-${year}`;
+            
+            // Prepare data for Excel
+            const excelData = papReports.map(report => ({
+                'ID': report.id,
+                'Nombre': report.nombre,
+                'CI': report.ci,
+                'Fecha de Examen': report.fecha,
+                'Resultado': report.resultado,
+                'Observaciones': report.observaciones
+            }));
+
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(excelData);
+
+            // Adjust column widths
+            const colWidths = [
+                { wch: 5 },   // ID
+                { wch: 25 },  // Nombre
+                { wch: 12 },  // CI
+                { wch: 15 },  // Fecha
+                { wch: 15 },  // Resultado
+                { wch: 30 }   // Observaciones
+            ];
+            ws['!cols'] = colWidths;
+
+            // Add worksheet to workbook
+            XLSX.utils.book_append_sheet(wb, ws, 'Informes PAP');
+
+            // Generate file name with current date
+            const fileName = `Informes_PAP_${formattedDate}.xlsx`;
+
+            // In a browser environment, we can't directly save files to the filesystem
+            // But we can trigger a download
+            try {
+                XLSX.writeFile(wb, fileName);
+            } catch (e) {
+                console.warn('Could not automatically save file:', e);
+            }
+        }
+        
+        function descargarExcelPAP() {
+            if (typeof XLSX === 'undefined') {
+                alert('⚠️ Error: La librería de Excel no está cargada correctamente.');
+                return;
+            }
+            
+            // Format current date as DD-MM-YYYY
+            const now = new Date();
+            const day = String(now.getDate()).padStart(2, '0');
+            const month = String(now.getMonth() + 1).padStart(2, '0');
+            const year = now.getFullYear();
+            const formattedDate = `${day}-${month}-${year}`;
+            
+            // Preparar datos para Excel
+            const excelData = papReports.map(report => ({
+                'ID': report.id,
+                'Nombre': report.nombre,
+                'CI': report.ci,
+                'Fecha de Examen': report.fecha,
+                'Resultado': report.resultado,
+                'Observaciones': report.observaciones
+            }));
+
+            // Crear libro de trabajo
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(excelData);
+
+            // Ajustar ancho de columnas
+            const colWidths = [
+                { wch: 5 },   // ID
+                { wch: 25 },  // Nombre
+                { wch: 12 },  // CI
+                { wch: 15 },  // Fecha
+                { wch: 15 },  // Resultado
+                { wch: 30 }   // Observaciones
+            ];
+            ws['!cols'] = colWidths;
+
+            // Agregar hoja al libro
+            XLSX.utils.book_append_sheet(wb, ws, 'Informes PAP');
+
+            // Generar nombre de archivo con fecha actual
+            const fileName = `Informes_PAP_${formattedDate}.xlsx`;
+
+            // Descargar archivo
+            XLSX.writeFile(wb, fileName);
+            
+            alert(`✅ Archivo Excel exportado exitosamente:\n${fileName}`);
+        }
+        
+        function importarDatos() {
+            const archivo = document.getElementById('archivoExcel').files[0];
+            
+            if (!archivo) {
+                alert('Por favor seleccione un archivo Excel');
+                return;
+            }
+            
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const data = new Uint8Array(e.target.result);
+                    const workbook = XLSX.read(data, {type: 'array'});
+                    const firstSheet = workbook.SheetNames[0];
+                    const worksheet = workbook.Sheets[firstSheet];
+                    const jsonData = XLSX.utils.sheet_to_json(worksheet);
+                    
+                    // Process the imported data
+                    if (jsonData.length > 0) {
+                        // Clear existing data
+                        papReports = [];
+                        
+                        // Convert imported data to our format
+                        jsonData.forEach((row, index) => {
+                            papReports.push({
+                                id: row.ID || index + 1,
+                                nombre: row.Nombre || row.nombre || '',
+                                ci: row.CI || row.ci || '',
+                                fecha: row['Fecha de Examen'] || row.fecha || '',
+                                resultado: row.Resultado || row.resultado || '',
+                                observaciones: row.Observaciones || row.observaciones || ''
+                            });
+                        });
+                        
+                        // Save to localStorage
+                        saveData();
+                        
+                        // Update UI
+                        actualizarListaInformes();
+                        actualizarEstadisticas();
+                        
+                        alert(`✅ ${jsonData.length} registros importados exitosamente.`);
+                        
+                        // Clear file input
+                        document.getElementById('archivoExcel').value = '';
+                    } else {
+                        alert('⚠️ El archivo no contiene datos válidos.');
+                    }
+                } catch (error) {
+                    console.error('Error importing data:', error);
+                    alert('❌ Error al importar el archivo. Por favor, asegúrese de que es un archivo Excel válido.');
+                }
+            };
+            
+            reader.onerror = function() {
+                alert('❌ Error al leer el archivo.');
+            };
+            
+            reader.readAsArrayBuffer(archivo);
+        }
+        
+        function descargarPlantilla() {
+            // Create template data
+            const templateData = [{
+                'ID': '',
+                'Nombre': '',
+                'CI': '',
+                'Fecha de Examen': '',
+                'Resultado': '',
+                'Observaciones': ''
+            }];
+            
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            const ws = XLSX.utils.json_to_sheet(templateData);
+            
+            // Adjust column widths
+            const colWidths = [
+                { wch: 5 },   // ID
+                { wch: 25 },  // Nombre
+                { wch: 12 },  // CI
+                { wch: 15 },  // Fecha
+                { wch: 15 },  // Resultado
+                { wch: 30 }   // Observaciones
+            ];
+            ws['!cols'] = colWidths;
+            
+            // Add worksheet to workbook
+            XLSX.utils.book_append_sheet(wb, ws, 'Plantilla PAP');
+            
+            // Generate file name
+            const fecha = new Date().toLocaleDateString('es-ES').replace(/\//g, '-');
+            const fileName = `Plantilla_PAP_${fecha}.xlsx`;
+            
+            // Download file
+            XLSX.writeFile(wb, fileName);
+            
+            alert(`✅ Plantilla Excel descargada exitosamente:\n${fileName}`);
+        }
+
+        // Navigation functions
+        function showSection(sectionId) {
+            // Hide all sections
+            document.getElementById('main-section').style.display = 'none';
+            document.getElementById('appointments-section').style.display = 'none';
+            document.getElementById('pap-section').style.display = 'none';
+            
+            // Show selected section
+            document.getElementById(sectionId + '-section').style.display = 'block';
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-links a').forEach(link => link.classList.remove('active'));
+            event.target.classList.add('active');
+        }
+
+        function openTab(evt, tabName) {
+            // Hide all tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // Remove active class from all tab buttons
+            document.querySelectorAll('.tab-button').forEach(button => {
+                button.classList.remove('active');
+            });
+            
+            // Show the current tab and add active class to the button
+            document.getElementById(tabName).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const appointmentModal = document.getElementById('appointmentModal');
+            const detalleModal = document.getElementById('detalleModal');
+            const correccionModal = document.getElementById('correccionModal');
+            const adminLoginModal = document.getElementById('adminLoginModal');
+            
+            if (event.target == appointmentModal) {
+                closeAppointmentModal();
+            } else if (event.target == detalleModal) {
+                cerrarModalDetalle();
+            } else if (event.target == correccionModal) {
+                cerrarModalCorreccion();
+            } else if (event.target == adminLoginModal) {
+                cerrarModalAdminLogin();
+            }
+        }
+        
+        // Cerrar modal con tecla Escape
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const appointmentModal = document.getElementById('appointmentModal');
+                const detalleModal = document.getElementById('detalleModal');
+                const correccionModal = document.getElementById('correccionModal');
+                const adminLoginModal = document.getElementById('adminLoginModal');
+                
+                if (appointmentModal && appointmentModal.style.display === 'block') {
+                    closeAppointmentModal();
+                } else if (detalleModal && detalleModal.style.display === 'block') {
+                    cerrarModalDetalle();
+                } else if (correccionModal && correccionModal.style.display === 'block') {
+                    cerrarModalCorreccion();
+                } else if (adminLoginModal && adminLoginModal.style.display === 'block') {
+                    cerrarModalAdminLogin();
+                }
+            }
+        });
+
+        // Animaciones de scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.scroll-animation');
+            const windowHeight = window.innerHeight;
+
+            elements.forEach(element => {
+                const elementTop = element.getBoundingClientRect().top;
+                const elementVisible = 150;
+
+                if (elementTop < windowHeight - elementVisible) {
+                    element.classList.add('visible');
+                }
+            });
+        }
+
+        window.addEventListener('scroll', animateOnScroll);
+        window.addEventListener('load', animateOnScroll);
+
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // Formulario de reclamos
+        document.getElementById('reclamosForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const submitBtn = this.querySelector('.reclamos-submit');
+            const originalText = submitBtn.textContent;
+            
+            submitBtn.textContent = 'Enviando...';
+            submitBtn.disabled = true;
+            
+            setTimeout(() => {
+                alert('¡Mensaje enviado exitosamente! Te contactaremos pronto.');
+                this.reset();
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }, 2000);
+        });
+
+        // Formato de teléfono
+        document.getElementById('telefono').addEventListener('input', function() {
+            let value = this.value.replace(/\D/g, '');
+            if (value.length > 0 && !value.startsWith('591')) {
+                if (value.length <= 8) {
+                    value = '591' + value;
+                }
+            }
+            
+            if (value.length >= 3) {
+                value = '+' + value.slice(0, 3) + ' ' + value.slice(3);
+            }
+            
+            this.value = value;
+        });
+
+        // Animación de contadores
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            const speed = 200;
+
+            counters.forEach(counter => {
+                const animate = () => {
+                    const value = counter.getAttribute('data-target') || counter.innerText;
+                    const data = +value.replace(/[^\d]/g, '');
+                    const time = value.replace(/[\d]/g, '').trim();
+                    
+                    counter.setAttribute('data-target', value);
+                    
+                    const increment = data / speed;
+                    let current = 0;
+
+                    if (current < data) {
+                        const timer = setInterval(() => {
+                            current += increment;
+                            if (current >= data) {
+                                current = data;
+                                clearInterval(timer);
+                            }
+                            counter.innerText = Math.floor(current) + (time || '');
+                        }, 1);
+                    }
+                };
+
+                const observer = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting) {
+                        animate();
+                        observer.unobserve(counter);
+                    }
+                });
+
+                observer.observe(counter);
+            });
+        }
+
+        animateCounters();
+
+        // Efecto de carga
+        window.addEventListener('load', () => {
+            document.body.style.opacity = '0';
+            document.body.style.transition = 'opacity 0.5s ease';
+            setTimeout(() => {
+                document.body.style.opacity = '1';
+            }, 100);
+        });
+
+        // Hover en tarjetas de servicios
+        document.querySelectorAll('.service-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.transition = 'transform 0.3s ease';
+            });
+
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Click to call
+        document.querySelectorAll('.feature-item').forEach(item => {
+            const text = item.querySelector('.feature-text').textContent;
+            if (text.includes('+591')) {
+                item.style.cursor = 'pointer';
+                item.addEventListener('click', () => {
+                    window.location.href = 'tel:' + text.replace(/\s/g, '');
+                });
+            } else if (text.includes('@')) {
+                item.style.cursor = 'pointer';
+                item.addEventListener('click', () => {
+                    window.location.href = 'mailto:' + text;
+                });
+            }
+        });
+        
+        // Batch add PAP records
+        function addBatchPAPRecords() {
+            const batchData = document.getElementById('batchData').value.trim();
+            
+            if (!batchData) {
+                alert('Por favor ingrese los datos de los pacientes');
+                return;
+            }
+            
+            const lines = batchData.split('\n');
+            const records = [];
+            
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) continue;
+                
+                const parts = line.split(',');
+                
+                if (parts.length < 4) {
+                    alert(`Error en la línea ${i + 1}: Formato incorrecto. Se requieren al menos 4 campos (Nombre, CI, Fecha, Resultado)`);
+                    return;
+                }
+                
+                records.push({
+                    nombre: parts[0].trim(),
+                    ci: parts[1].trim(),
+                    fecha: parts[2].trim(),
+                    resultado: parts[3].trim(),
+                    observaciones: parts[4] ? parts[4].trim() : ''
+                });
+            }
+            
+            if (records.length > 0) {
+                const addedRecords = addPAPRecordsBatch(records);
+                if (addedRecords.length > 0) {
+                    document.getElementById('batchData').value = '';
+                }
+            }
+        }
+        
+        // Clear batch data
+        function clearBatchData() {
+            document.getElementById('batchData').value = '';
+        }
+    </script>
+</body>
+</html>
